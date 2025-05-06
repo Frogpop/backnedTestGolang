@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "backnedTestGolang/internal/app"
 
+func main() {
+	app.Run()
 }
