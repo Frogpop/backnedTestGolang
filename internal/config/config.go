@@ -17,7 +17,7 @@ type (
 	}
 	StorageConfig struct {
 		Host     string `yaml:"host" env-required:"true"`
-		Port     string `yaml:"port" env-default:"5432"`
+		Port     int    `yaml:"port" env-default:"5432"`
 		Username string `yaml:"username" env-default:"postgres"`
 		Password string `yaml:"password" env-default:"postgres"`
 		DBName   string `yaml:"dbname" env-default:"postgres"`
@@ -25,7 +25,7 @@ type (
 	}
 	HttpConfig struct {
 		Host         string        `yaml:"host" env-required:"true"`
-		Port         string        `yaml:"port" env-default:"8080"`
+		Port         int           `yaml:"port" env-default:"8080"`
 		ReadTimeout  time.Duration `yaml:"read_timeout" env-default:"5s"`
 		WriteTimeout time.Duration `yaml:"write_timeout" env-default:"60s"`
 	}
