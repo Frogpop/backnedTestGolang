@@ -3,7 +3,8 @@ package services
 import (
 	"backnedTestGolang/internal/dto"
 	"backnedTestGolang/internal/models"
-	"backnedTestGolang/internal/repository"
+	"backnedTestGolang/internal/repository/cart"
+	"backnedTestGolang/internal/repository/order"
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
@@ -18,11 +19,11 @@ type CartService interface {
 }
 
 type cartServiceImpl struct {
-	cartRepo  repository.CartRepos
-	orderRepo repository.OrderRepos
+	cartRepo  cart.CartRepos
+	orderRepo order.OrderRepos
 }
 
-func NewCartService(cartRepo repository.CartRepos, orderRepo repository.OrderRepos) CartService {
+func NewCartService(cartRepo cart.CartRepos, orderRepo order.OrderRepos) CartService {
 	return &cartServiceImpl{cartRepo: cartRepo, orderRepo: orderRepo}
 }
 
