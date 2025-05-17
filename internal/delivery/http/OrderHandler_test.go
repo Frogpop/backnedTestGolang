@@ -90,8 +90,7 @@ func TestOrderHandler_ChangeOrderStatus(t *testing.T) {
 	})
 
 	t.Run("service error", func(t *testing.T) {
-		var empty *dto.UserOrdersDTO
-		service.On("ChangeOrderStatus", uint64(1), "status").Return(empty, errors.New("service error"))
+		service.On("ChangeOrderStatus", uint64(1), "status").Return(errors.New("service error"))
 
 		body := `{"order_id": 1, "status": "status"}`
 		req, _ := http.NewRequest(http.MethodPost, "/order/change_status", strings.NewReader(body))

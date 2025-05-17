@@ -39,7 +39,7 @@ func TestOrderServiceImpl_GetOrders(t *testing.T) {
 	err = db.Create(&models.Order{UserID: 1, Items: []models.OrderItem{{ProductID: 1, Quantity: 1}, {ProductID: 2, Quantity: 1}}}).Error
 	assert.NoError(t, err)
 
-	orders, err := service.GetOrders(1)
+	orders, err := service.GetUserOrders(1)
 	assert.NoError(t, err)
 
 	var q_orders []dto.ItemDTO
