@@ -10,7 +10,7 @@ import (
 )
 
 type OrderService interface {
-	GetOrders(userID uint64) (*dto.UserOrdersDTO, error)
+	GetUserOrders(userID uint64) (*dto.UserOrdersDTO, error)
 	ChangeOrderStatus(orderID uint64, status string) error
 }
 
@@ -22,8 +22,8 @@ func NewOrderService(orderRepo order.OrderRepos) OrderService {
 	return &OrderServiceImpl{orderRepo: orderRepo}
 }
 
-func (s *OrderServiceImpl) GetOrders(userID uint64) (*dto.UserOrdersDTO, error) {
-	const op = "OrderServiceImpl.GetOrders"
+func (s *OrderServiceImpl) GetUserOrders(userID uint64) (*dto.UserOrdersDTO, error) {
+	const op = "OrderServiceImpl.GetUserOrders"
 
 	var orders *[]order.OrderWithItemsRaw
 	var err error
