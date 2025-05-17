@@ -1,4 +1,4 @@
-package repository
+package cart
 
 import (
 	"backnedTestGolang/internal/dto"
@@ -104,7 +104,7 @@ func (r *cartRepo) GetCartItems(userID uint64) (*[]dto.ItemDTO, error) {
 func (r *cartRepo) ClearCart(cartID uint64) error {
 	const op = "CartRepo.ClearCart"
 
-	if err := r.db.Where("cart_id = ?", cartID).Delete(&models.CartItem{}); err != nil {
+	if err := r.db.Where("cart_id = ?", cartID).Delete(&models.CartItem{}).Error; err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
