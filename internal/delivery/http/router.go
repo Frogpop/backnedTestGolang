@@ -3,6 +3,8 @@ package http
 import (
 	"backnedTestGolang/internal/delivery/http/middleware"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log/slog"
 )
 
@@ -30,6 +32,8 @@ func (r *Router) Init(log *slog.Logger) *gin.Engine {
 	router.GET("/cart/get", r.cartHandler.GetCartItems)
 	router.GET("/order/get", r.orderHandler.GetUserOrders)
 	router.POST("/order/change_status", r.orderHandler.ChangeOrderStatus)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }
