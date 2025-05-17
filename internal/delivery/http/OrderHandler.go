@@ -2,7 +2,7 @@ package http
 
 import (
 	"backnedTestGolang/internal/dto"
-	"backnedTestGolang/internal/services"
+	"backnedTestGolang/internal/services/order"
 	"backnedTestGolang/pkg/logger"
 	"errors"
 	"fmt"
@@ -17,10 +17,10 @@ type OrderHandler interface {
 }
 
 type orderHandler struct {
-	orderService services.OrderService
+	orderService order.OrderService
 }
 
-func NewOrderHandler(orderService services.OrderService) OrderHandler {
+func NewOrderHandler(orderService order.OrderService) OrderHandler {
 	return &orderHandler{orderService: orderService}
 }
 

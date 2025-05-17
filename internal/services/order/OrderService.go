@@ -1,4 +1,4 @@
-package services
+package order
 
 import (
 	"backnedTestGolang/internal/dto"

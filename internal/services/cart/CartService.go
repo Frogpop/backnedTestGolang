@@ -1,4 +1,4 @@
-package services
+package cart
 
 import (
 	"backnedTestGolang/internal/dto"
@@ -36,7 +36,7 @@ func (s *cartServiceImpl) AddProduct(cartID, productID uint64, quantity int) err
 	}
 
 	if item == nil {
-		if err = s.cartRepo.CreateItem(&models.CartItem{CartID: cartID, ProductID: productID}); err != nil {
+		if err = s.cartRepo.CreateItem(&models.CartItem{CartID: cartID, ProductID: productID, Quantity: quantity}); err != nil {
 			return fmt.Errorf("%s: %w", op, err)
 		}
 		return nil
@@ -108,6 +108,10 @@ func (s *cartServiceImpl) Checkout(userID uint64) error {
 
 	if cart.Items == nil {
 		return nil
+	}
+
+	if err = s.cartRepo.ClearCart(userID); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	orderItems := make([]models.OrderItem, len(cart.Items))

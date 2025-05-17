@@ -2,7 +2,7 @@ package http
 
 import (
 	"backnedTestGolang/internal/dto"
-	"backnedTestGolang/internal/services"
+	"backnedTestGolang/internal/services/cart"
 	"backnedTestGolang/pkg/logger"
 	"errors"
 	"fmt"
@@ -20,10 +20,10 @@ type CartHandler interface {
 }
 
 type cartHandler struct {
-	cartService services.CartService
+	cartService cart.CartService
 }
 
-func NewCartHandler(cartService services.CartService) CartHandler {
+func NewCartHandler(cartService cart.CartService) CartHandler {
 	return &cartHandler{cartService: cartService}
 }
 

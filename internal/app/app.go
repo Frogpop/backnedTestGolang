@@ -5,9 +5,10 @@ import (
 	"backnedTestGolang/internal/database/postgres"
 	"backnedTestGolang/internal/delivery/http"
 	"backnedTestGolang/internal/logger"
-	"backnedTestGolang/internal/repository/cart"
-	"backnedTestGolang/internal/repository/order"
-	"backnedTestGolang/internal/services"
+	cart_repository "backnedTestGolang/internal/repository/cart"
+	order_repository "backnedTestGolang/internal/repository/order"
+	cart_service "backnedTestGolang/internal/services/cart"
+	order_service "backnedTestGolang/internal/services/order"
 	"github.com/joho/godotenv"
 	"log"
 	"log/slog"
@@ -32,11 +33,11 @@ func Run() {
 	}
 	log.Info("Database initialized successfully")
 
-	repCart := cart.NewCartRepo(db)
-	repOrder := order.NewOrderRepo(db)
+	repCart := cart_repository.NewCartRepo(db)
+	repOrder := order_repository.NewOrderRepo(db)
 
-	cartService := services.NewCartService(repCart, repOrder)
-	orderService := services.NewOrderService(repOrder)
+	cartService := cart_service.NewCartService(repCart, repOrder)
+	orderService := order_service.NewOrderService(repOrder)
 
 	cartHandler := http.NewCartHandler(cartService)
 	orderHandler := http.NewOrderHandler(orderService)
