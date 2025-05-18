@@ -40,15 +40,18 @@ func (h *orderHandler) GetUserOrders(c *gin.Context) {
 	var req dto.GetOrdersRequest
 
 	if err := c.ShouldBindQuery(&req); err != nil {
+		c.Error(err)
 		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "invalid input", Details: logger.ValidationErrors(err).Error()})
 		return
 	}
 
 	orders, err := h.orderService.GetUserOrders(req.UserID)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.Error(err)
 		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: "record not found"})
 		return
 	} else if err != nil {
+		c.Error(err)
 		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "internal server error"})
 	}
 
