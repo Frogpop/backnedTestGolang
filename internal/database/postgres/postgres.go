@@ -3,9 +3,11 @@ package postgres
 import (
 	"backnedTestGolang/internal/config"
 	"backnedTestGolang/internal/models"
+	"backnedTestGolang/pkg/database"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"time"
 )
 
 func NewPostgresDB(cfg config.StorageConfig) (*gorm.DB, error) {
@@ -17,6 +19,10 @@ func NewPostgresDB(cfg config.StorageConfig) (*gorm.DB, error) {
 		cfg.DBName,
 		cfg.SslMode,
 	)
+	if err := database.WaitForPostgres(postgesURL, 10, 5*time.Second); err != nil {
+
+	}
+
 	db, err := gorm.Open(postgres.Open(postgesURL), &gorm.Config{})
 
 	if err != nil {
@@ -24,11 +30,11 @@ func NewPostgresDB(cfg config.StorageConfig) (*gorm.DB, error) {
 	}
 
 	err = db.AutoMigrate(
+		&models.Product{},
 		&models.Cart{},
 		&models.CartItem{},
 		&models.Order{},
 		&models.OrderItem{},
-		&models.Product{},
 	)
 
 	if err != nil {
