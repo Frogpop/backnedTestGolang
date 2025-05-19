@@ -1,9 +1,10 @@
-package services
+package cart
 
 import (
 	"backnedTestGolang/internal/dto"
 	"backnedTestGolang/internal/models"
-	"backnedTestGolang/internal/repository"
+	"backnedTestGolang/internal/repository/cart"
+	"backnedTestGolang/internal/repository/order"
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
@@ -18,11 +19,11 @@ type CartService interface {
 }
 
 type cartServiceImpl struct {
-	cartRepo  repository.CartRepos
-	orderRepo repository.OrderRepos
+	cartRepo  cart.CartRepos
+	orderRepo order.OrderRepos
 }
 
-func NewCartService(cartRepo repository.CartRepos, orderRepo repository.OrderRepos) CartService {
+func NewCartService(cartRepo cart.CartRepos, orderRepo order.OrderRepos) CartService {
 	return &cartServiceImpl{cartRepo: cartRepo, orderRepo: orderRepo}
 }
 
@@ -35,7 +36,7 @@ func (s *cartServiceImpl) AddProduct(cartID, productID uint64, quantity int) err
 	}
 
 	if item == nil {
-		if err = s.cartRepo.CreateItem(&models.CartItem{CartID: cartID, ProductID: productID}); err != nil {
+		if err = s.cartRepo.CreateItem(&models.CartItem{CartID: cartID, ProductID: productID, Quantity: quantity}); err != nil {
 			return fmt.Errorf("%s: %w", op, err)
 		}
 		return nil
@@ -107,6 +108,10 @@ func (s *cartServiceImpl) Checkout(userID uint64) error {
 
 	if cart.Items == nil {
 		return nil
+	}
+
+	if err = s.cartRepo.ClearCart(userID); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	orderItems := make([]models.OrderItem, len(cart.Items))

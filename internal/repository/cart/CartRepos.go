@@ -1,4 +1,4 @@
-package repository
+package cart
 
 import (
 	"backnedTestGolang/internal/dto"
@@ -82,7 +82,9 @@ func (r *cartRepo) RemoveItem(cartID, productID uint64) error {
 func (r *cartRepo) GetCart(userID uint64) (*models.Cart, error) {
 	const op = "CartRepo.GetCart"
 	var cart *models.Cart
-	if err := r.db.Where("user_id = ?", userID).Preload("Items").First(&cart).Error; err != nil {
+	if err := r.db.Where("user_id = ?", userID).Preload("Items").First(&cart).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	} else if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	return cart, nil
@@ -92,8 +94,8 @@ func (r *cartRepo) GetCartItems(userID uint64) (*[]dto.ItemDTO, error) {
 	const op = "CartRepo.GetCartItems"
 
 	var items *[]dto.ItemDTO
-	if err := r.db.Table("cart_items").Select("name", "price", "quantity").Joins("join products on products.id = cart_items.product_id").Where("cart_id = ?", userID).Scan(&items).Error; errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
+	if err := r.db.Table("cart_items").Select("name", "price", "quantity").Joins("join products on products.id = cart_items.product_id").Where("cart_id = ?", userID).Scan(&items).Error; errors.Is(err, gorm.ErrRecordNotFound) || items == nil {
+		return nil, gorm.ErrRecordNotFound
 	} else if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
@@ -104,7 +106,7 @@ func (r *cartRepo) GetCartItems(userID uint64) (*[]dto.ItemDTO, error) {
 func (r *cartRepo) ClearCart(cartID uint64) error {
 	const op = "CartRepo.ClearCart"
 
-	if err := r.db.Where("cart_id = ?", cartID).Delete(&models.CartItem{}); err != nil {
+	if err := r.db.Where("cart_id = ?", cartID).Delete(&models.CartItem{}).Error; err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 

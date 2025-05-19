@@ -2,10 +2,10 @@ package mapper
 
 import (
 	"backnedTestGolang/internal/dto"
-	"backnedTestGolang/internal/repository"
+	"backnedTestGolang/internal/repository/order"
 )
 
-func ToUserOrdersDTO(orders_raw *[]repository.OrderWithItemsRaw) *dto.UserOrdersDTO {
+func ToUserOrdersDTO(orders_raw *[]order.OrderWithItemsRaw) *dto.UserOrdersDTO {
 	userOrders := &dto.UserOrdersDTO{UserID: (*orders_raw)[0].UserID}
 	ordersMap := make(map[uint64]dto.OrderDTO)
 	for _, row := range *orders_raw {

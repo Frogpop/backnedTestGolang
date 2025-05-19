@@ -1,4 +1,4 @@
-package repository
+package order
 
 import (
 	"backnedTestGolang/internal/models"
@@ -39,7 +39,7 @@ func (r *orderRepo) CreateOrder(order *models.Order) (uint64, error) {
 }
 
 func (r *orderRepo) GetOrders(userID uint64) (*[]OrderWithItemsRaw, error) {
-	const op = "OrderRepo.GetOrders"
+	const op = "OrderRepo.GetUserOrders"
 
 	var userOrders []OrderWithItemsRaw
 	if err := r.db.Table("orders").Select("user_id, order_id, status, name, price, quantity").Joins("join order_items oi on orders.id = oi.order_id join products p on oi.product_id = p.id").Where("user_id = ?", userID).Scan(&userOrders).Error; errors.Is(err, gorm.ErrRecordNotFound) {
